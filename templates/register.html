@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+{% block title %}Create account | Tree Register{% endblock %}
+{% block tagline %}Create your own register. Only you can see your entries.{% endblock %}
+
+{% block content %}
+<main class="auth-wrap">
+  <div class="auth-card">
+    <h2>Create account</h2>
+    <p class="lead">It takes a minute. You will be signed in straight away.</p>
+
+    <div class="private-note">Your entries are private. Other users cannot see, change or delete them.</div>
+
+    {% if error %}<div class="msg error" role="alert">{{ error }}</div>{% endif %}
+
+    <form method="POST" action="{{ url_for('register') }}">
+      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+      <div class="field">
+        <label for="full_name">Full name</label>
+        <input type="text" id="full_name" name="full_name" autocomplete="name" maxlength="100"
+               value="{{ form.get('full_name', '') }}" required autofocus>
+      </div>
+      <div class="field">
+        <label for="username">Username</label>
+        <input type="text" id="username" name="username" autocomplete="username"
+               autocapitalize="none" spellcheck="false" maxlength="30"
+               value="{{ form.get('username', '') }}" required>
+        <span class="hint">3 to 30 characters: small letters, numbers, dot or underscore.</span>
+      </div>
+      <div class="field">
+        <label for="email">Email</label>
+        <input type="email" id="email" name="email" autocomplete="email" maxlength="120"
+               autocapitalize="none" spellcheck="false"
+               value="{{ form.get('email', '') }}" required>
+        <span class="hint">You can use your email or your username to sign in.</span>
+      </div>
+      <div class="field">
+        <label for="password">Password</label>
+        <input type="password" id="password" name="password" autocomplete="new-password" minlength="8" required>
+        <span class="hint">At least 8 characters.</span>
+      </div>
+      <div class="field">
+        <label for="confirm_password">Confirm password</label>
+        <input type="password" id="confirm_password" name="confirm_password" autocomplete="new-password" minlength="8" required>
+      </div>
+      <label class="show-pass"><input type="checkbox" data-show-password="password,confirm_password"> Show passwords</label>
+      <button type="submit" class="btn btn-primary btn-block">Create account</button>
+    </form>
+
+    <p class="auth-switch">Already registered? <a href="{{ url_for('login') }}">Sign in</a></p>
+  </div>
+</main>
+{% endblock %}
+
+{% block scripts %}
+<script>
+  document.querySelectorAll("[data-show-password]").forEach(function (box) {
+    box.addEventListener("change", function () {
+      box.dataset.showPassword.split(",").forEach(function (id) {
+        document.getElementById(id).type = box.checked ? "text" : "password";
+      });
+    });
+  });
+</script>
+{% endblock %}

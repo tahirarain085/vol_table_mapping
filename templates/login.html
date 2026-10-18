@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+{% block title %}Sign in | Tree Register{% endblock %}
+{% block tagline %}Sign in to your own register.{% endblock %}
+
+{% block content %}
+<main class="auth-wrap">
+  <div class="auth-card">
+    <h2>Sign in</h2>
+    <p class="lead">Use your username or email, and your password.</p>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% for category, message in messages %}
+        <div class="msg {{ category }}" role="status">{{ message }}</div>
+      {% endfor %}
+    {% endwith %}
+    {% if error %}<div class="msg error" role="alert">{{ error }}</div>{% endif %}
+
+    <form method="POST" action="{{ url_for('login') }}">
+      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+      <div class="field">
+        <label for="username">Username or email</label>
+        <input type="text" id="username" name="username" autocomplete="username"
+               autocapitalize="none" spellcheck="false" maxlength="120"
+               value="{{ form.get('username', '') }}" required autofocus>
+      </div>
+      <div class="field">
+        <label for="password">Password</label>
+        <input type="password" id="password" name="password" autocomplete="current-password" required>
+      </div>
+      <label class="show-pass"><input type="checkbox" data-show-password="password"> Show password</label>
+      <button type="submit" class="btn btn-primary btn-block">Sign in</button>
+    </form>
+
+    <p class="auth-switch">New here? <a href="{{ url_for('register') }}">Create an account</a></p>
+  </div>
+</main>
+{% endblock %}
+
+{% block scripts %}
+<script>
+  document.querySelectorAll("[data-show-password]").forEach(function (box) {
+    box.addEventListener("change", function () {
+      box.dataset.showPassword.split(",").forEach(function (id) {
+        document.getElementById(id).type = box.checked ? "text" : "password";
+      });
+    });
+  });
+</script>
+{% endblock %}
